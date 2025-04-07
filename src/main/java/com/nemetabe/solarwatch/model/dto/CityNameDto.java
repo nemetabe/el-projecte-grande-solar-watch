@@ -6,12 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class CityNameDto {
-    private String name;
-    private String country;
-    private String state;
+
+public record CityNameDto (String name, String country) {
+
 }
