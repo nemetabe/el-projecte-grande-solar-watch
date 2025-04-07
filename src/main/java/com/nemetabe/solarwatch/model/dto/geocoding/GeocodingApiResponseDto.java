@@ -1,7 +1,6 @@
-package com.nemetabe.solarwatch.model.dto;
+package com.nemetabe.solarwatch.model.dto.geocoding;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.nemetabe.solarwatch.model.GeocodingData;
 
 import java.util.List;
 

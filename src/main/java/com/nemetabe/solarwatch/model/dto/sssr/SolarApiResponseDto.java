@@ -1,4 +1,4 @@
-package com.nemetabe.solarwatch.model.dto;
+package com.nemetabe.solarwatch.model.dto.sssr;
 
 import lombok.Data;
 import lombok.Getter;

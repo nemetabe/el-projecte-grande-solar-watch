@@ -13,8 +13,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "solar_data")
-public class SolarData {
+@Table(name = "solar_times")
+public class SolarTimes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,18 +22,15 @@ public class SolarData {
 
     private LocalDate date;
 
-
     @Column(nullable = false)
     private LocalTime sunrise;
     @Column(nullable = false)
     private LocalTime sunset;
 
-
     @Column(name = "solar_noon", nullable = false)
     private LocalTime solarNoon;
     @Column(name = "day_length", nullable = false)
     private Duration dayLength;
-
 
     @Column(name = "civil_twilight_begin", nullable = false)
     private LocalTime civilTwilightBegin;
