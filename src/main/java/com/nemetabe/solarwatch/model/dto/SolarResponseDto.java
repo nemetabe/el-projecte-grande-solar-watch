@@ -1,6 +1,7 @@
 package com.nemetabe.solarwatch.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.Duration;
@@ -10,7 +11,11 @@ import java.time.LocalTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SolarDataDto {
+public class SolarResponseDto {
+
+    private Long id;
+
+    @JsonFormat(pattern = "YYYY-mm-dd")
     private LocalDate date;
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime sunrise;
@@ -41,6 +46,7 @@ public class SolarDataDto {
 
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime astronomical_twilight_end;
+
 
     private CityNameDto city;
     private String tzid;

@@ -1,14 +1,16 @@
 package com.nemetabe.solarwatch.model.mapper;
 
-import com.nemetabe.solarwatch.model.GeocodingData;
-import com.nemetabe.solarwatch.model.dto.CityDto;
+import com.nemetabe.solarwatch.model.dto.geocoding.GeocodingData;
+import com.nemetabe.solarwatch.model.dto.CityResponseDto;
 import com.nemetabe.solarwatch.model.dto.CityNameDto;
-import com.nemetabe.solarwatch.model.dto.GeocodingApiResponseDto;
+import com.nemetabe.solarwatch.model.dto.geocoding.GeocodingApiResponseDto;
 import com.nemetabe.solarwatch.model.entity.City;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class CityMapper {
 
     public static List<City> toEntity(GeocodingApiResponseDto responseDto) {
@@ -25,23 +27,22 @@ public class CityMapper {
             city.setCountry(dto.country());
             cities.add(city);
         }
-
         return cities;
     }
 
     // Converts City entity to City DTO (full information)
-    public static CityDto toDto(City city) {
+    public static CityResponseDto toDto(City city) {
         if (city == null) {
             return null;
         }
 
-        CityDto dto = new CityDto();
+        CityResponseDto dto = new CityResponseDto();
         dto.setName(city.getName());
         dto.setLatitude(city.getLatitude());
         dto.setLongitude(city.getLongitude());
+        dto.setState(city.getState());
         dto.setCountry(city.getCountry());
-        //dto.setLocalNames(city.getLocalNames());
-
+        dto.setLocalNames(city.getLocalNames());
         return dto;
     }
 

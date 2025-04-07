@@ -1,7 +1,6 @@
 package com.nemetabe.solarwatch.model.entity;
 
 
-import com.nemetabe.solarwatch.model.entity.SolarData;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -41,9 +41,14 @@ public class City {
     @Column(name = "lon", nullable = false)
     private double longitude;
 
-    //TODO add localnames
+    @ElementCollection
+    @MapKeyColumn(name = "language_code")  // This is the key column in the database
+    @Column(name = "local_name")  // This is the value column in the database
+    @CollectionTable(name = "city_local_names", joinColumns = @JoinColumn(name = "city_id"))
+    private Map<String, String> localNames;
 
+    @Column(name = "solar_times")
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<SolarData> solarDataList = new ArrayList<>();
+    private List<SolarTimes> solarTimes = new ArrayList<>();
 
 }
