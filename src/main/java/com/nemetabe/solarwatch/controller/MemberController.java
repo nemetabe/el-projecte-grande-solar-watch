@@ -1,15 +1,11 @@
 package com.nemetabe.solarwatch.controller;
 
 import com.nemetabe.solarwatch.model.dto.member.MemberRegistrationDto;
-import com.nemetabe.solarwatch.model.entity.Role;
 import com.nemetabe.solarwatch.model.entity.Member;
-import com.nemetabe.solarwatch.model.payload.CreateMemberRequest;
 import com.nemetabe.solarwatch.model.payload.JwtResponse;
 import com.nemetabe.solarwatch.model.payload.UserRequest;
-import com.nemetabe.solarwatch.repository.MemberRepository;
 import com.nemetabe.solarwatch.security.jwt.JwtUtils;
 import com.nemetabe.solarwatch.service.MemberService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/member")

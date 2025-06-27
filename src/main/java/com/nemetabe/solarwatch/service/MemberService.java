@@ -1,6 +1,5 @@
 package com.nemetabe.solarwatch.service;
 
-import com.nemetabe.solarwatch.model.dto.member.MemberDto;
 import com.nemetabe.solarwatch.model.dto.member.MemberRegistrationDto;
 import com.nemetabe.solarwatch.model.entity.Member;
 import com.nemetabe.solarwatch.model.entity.Role;
