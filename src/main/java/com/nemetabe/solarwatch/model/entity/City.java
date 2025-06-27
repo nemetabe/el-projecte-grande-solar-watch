@@ -1,5 +1,6 @@
 package com.nemetabe.solarwatch.model.entity;
 
+import java.util.Arrays;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,8 +19,8 @@ import java.util.Map;
 @Entity
 @Table(
         name = "cities",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "state"}) // avoid duplicate cities in same country
-)
+        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "country"}) // avoid duplicate cities in same country
+)//TODO state <-> country
 public class City {
 
     @Id
@@ -32,20 +33,20 @@ public class City {
     @Column(nullable = false)
     private String country;
 
-    @Column(nullable = false)
+    @Column()
     private String state;
 
     @Column(name = "lat", nullable = false)
-    private double latitude;
+    private Double latitude;
 
     @Column(name = "lon", nullable = false)
-    private double longitude;
+    private Double longitude;
 
-    @ElementCollection
-    @MapKeyColumn(name = "language_code")  // This is the key column in the database
-    @Column(name = "local_name")  // This is the value column in the database
-    @CollectionTable(name = "city_local_names", joinColumns = @JoinColumn(name = "city_id"))
-    private Map<String, String> localNames;
+//    @ElementCollection
+//    @MapKeyColumn(name = "language_code")  // This is the key column in the database
+//    @Column(name = "local_name")  // This is the value column in the database
+//    @CollectionTable(name = "city_local_names", joinColumns = @JoinColumn(name = "city_id"))
+//    private Map<String, String> localNames;
 
     @Column(name = "solar_times")
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
