@@ -47,8 +47,11 @@ public class SolarResponseDto {
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime astronomical_twilight_end;
 
-
     private CityNameDto city;
     private String tzid;
+
+    public SolarResponseDto(LocalDate date, LocalTime sunrise, LocalTime sunset, LocalTime solarNoon, Duration dayLength, LocalTime firstLight, LocalTime lastLight, LocalTime dusk, LocalTime dawn, LocalTime nightBegin, LocalTime nightEnd, com.nemetabe.solarwatch.model.dto.city.CityNameDto nameDto, String timeZone) {
+
+    }
 }
 
