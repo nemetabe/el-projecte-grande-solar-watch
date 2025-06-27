@@ -1,5 +1,6 @@
-package com.nemetabe.solarwatch.model.dto;
+package com.nemetabe.solarwatch.model.dto.solar;
 
+import com.nemetabe.solarwatch.model.dto.city.CityNameDto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
