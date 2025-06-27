@@ -1,9 +1,9 @@
-package com.nemetabe.solarwatch.model.mapper;
+package com.nemetabe.solarwatch.mapper;
 
-import com.nemetabe.solarwatch.model.dto.geocoding.GeocodingData;
-import com.nemetabe.solarwatch.model.dto.CityResponseDto;
-import com.nemetabe.solarwatch.model.dto.CityNameDto;
-import com.nemetabe.solarwatch.model.dto.geocoding.GeocodingApiResponseDto;
+import com.nemetabe.solarwatch.model.dto.api.geocoding.GeocodingDataDto;
+import com.nemetabe.solarwatch.model.dto.city.CityResponseDto;
+import com.nemetabe.solarwatch.model.dto.city.CityNameDto;
+import com.nemetabe.solarwatch.model.dto.api.geocoding.GeocodingApiResponseDto;
 import com.nemetabe.solarwatch.model.entity.City;
 import org.springframework.stereotype.Service;
 
@@ -13,24 +13,31 @@ import java.util.List;
 @Service
 public class CityMapper {
 
-    public static List<City> toEntity(GeocodingApiResponseDto responseDto) {
+    public static List<City> toEntities(GeocodingApiResponseDto responseDto) {
         if (responseDto == null) {
             return null;
         }
         List<City> cities = new ArrayList<>();
 
-        for (GeocodingData dto : responseDto.resultCities()) {
-            City city = new City();
-            city.setName(dto.name());
-            city.setLatitude(dto.lat());
-            city.setLongitude(dto.lon());
-            city.setCountry(dto.country());
+        for (GeocodingDataDto dto : responseDto.resultCities()) {
+            City city = toEntity(dto);
             cities.add(city);
         }
         return cities;
     }
 
-    // Converts City entity to City DTO (full information)
+
+    public static City toEntity(GeocodingDataDto dto) {
+        City city = new City();
+        city.setName(dto.name());
+        city.setLatitude(dto.lat());
+        city.setLongitude(dto.lon());
+        city.setCountry(dto.country());
+        if (dto.state() == null) {
+            city.setState(null);
+        }
+        return city;
+    }
     public static CityResponseDto toDto(City city) {
         if (city == null) {
             return null;
@@ -42,16 +49,13 @@ public class CityMapper {
         dto.setLongitude(city.getLongitude());
         dto.setState(city.getState());
         dto.setCountry(city.getCountry());
-        dto.setLocalNames(city.getLocalNames());
         return dto;
     }
 
-    // Converts City entity to a partial DTO (e.g., NameDto)
     public static CityNameDto toNameDto(City city) {
         if (city == null) {
             return null;
         }
-
         CityNameDto nameDto = new CityNameDto(city.getName(), city.getCountry());
         return nameDto;
     }

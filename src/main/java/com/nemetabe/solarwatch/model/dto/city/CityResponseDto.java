@@ -1,6 +1,6 @@
-package com.nemetabe.solarwatch.model.dto;
+package com.nemetabe.solarwatch.model.dto.city;
 
-import com.nemetabe.solarwatch.model.entity.SolarTimes;
+import com.nemetabe.solarwatch.model.dto.solar.SolarResponseDto;
 import lombok.*;
 
 import java.util.List;
@@ -18,7 +18,6 @@ public class CityResponseDto {
     private String state;
     private double latitude;
     private double longitude;
-    private Map<String, String> localNames;
     private List<SolarResponseDto> solarTimes;
 
 }
