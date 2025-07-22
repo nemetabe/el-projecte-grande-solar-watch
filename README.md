@@ -71,6 +71,7 @@ EXPIRATION=6800000
 
 ```bash
 ./mvnw clean install
+./export $(cat src/.env | xargs)
 ./mvnw spring-boot:run
 ```
 
@@ -217,5 +218,3 @@ curl "http://localhost:8080/api/solar?city=Berlin"
 > **Note:** The exact times in the example response are illustrative and would vary based on the actual date and location. The current date is July 21, 2025.
 
 ---
-
-Feel free to save this content as `README.md` in your project's root directory. Let me know if you need any further adjustments or if you decide to add the screenshots later!
