@@ -1,6 +1,6 @@
 package com.nemetabe.solarwatch.model.entity;
 
-import com.nemetabe.solarwatch.model.dto.member.MemberRegistrationDto;
+import com.nemetabe.solarwatch.model.payload.MemberRegistrationDto;
 import com.nemetabe.solarwatch.model.dto.member.MemberDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,12 +41,13 @@ public class Member {
     }
 
 
+//TODO
+//    public Member(MemberDto memberDto) {
+//        id = memberDto.id();
+//        name = memberDto.name();
+//        email = memberDto.email();
+//    }
 
-    public Member(MemberDto memberDto) {
-        id = memberDto.id();
-        name = memberDto.name();
-        email = memberDto.email();
-    }
 
     @Override
     public String toString() {

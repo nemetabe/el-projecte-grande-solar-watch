@@ -1,4 +1,4 @@
-package com.nemetabe.solarwatch.model.dto.member;
+package com.nemetabe.solarwatch.model.payload;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 
