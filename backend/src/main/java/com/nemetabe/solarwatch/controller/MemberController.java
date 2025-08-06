@@ -1,11 +1,12 @@
 package com.nemetabe.solarwatch.controller;
 
-import com.nemetabe.solarwatch.model.dto.member.MemberRegistrationDto;
-import com.nemetabe.solarwatch.model.entity.Member;
-import com.nemetabe.solarwatch.model.payload.JwtResponse;
-import com.nemetabe.solarwatch.model.payload.UserRequest;
+import com.nemetabe.solarwatch.model.payload.MemberLoginDto;
+import com.nemetabe.solarwatch.model.payload.MemberRegistrationDto;
+import com.nemetabe.solarwatch.model.payload.JwtResponseDto;
 import com.nemetabe.solarwatch.security.jwt.JwtUtils;
 import com.nemetabe.solarwatch.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,36 +25,39 @@ import java.util.List;
 public class MemberController {
 
     private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder encoder;
     private final JwtUtils jwtUtils;
+    private final PasswordEncoder passwordEncoder;
     private final MemberService memberService;
 
-    public MemberController(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, MemberService memberService) {
+    @Autowired
+    public MemberController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, MemberService memberService, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
-        this.encoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this.memberService = memberService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register") //TODO
     public ResponseEntity<Void> createUser(@RequestBody MemberRegistrationDto memberRegistration) {
-        return memberService.register(memberRegistration, encoder);
+        if (memberService.register(memberRegistration, passwordEncoder)) {
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody UserRequest loginRequest) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    @PostMapping("/auth/login") //TODO
+    public ResponseEntity<?> authenticateUser(@RequestBody MemberLoginDto loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+        String token = jwtUtils.generateJwtToken(authentication);
 
         User userDetails = (User) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .toList();
-        Member loggedMember = memberService.findMemberByEmail(userDetails.getUsername());
         return ResponseEntity
-                .ok(new JwtResponse(jwt, loggedMember.getName(), roles));
+                .ok(new JwtResponseDto(token, userDetails.getUsername(), roles));//TODO authResponse
     }
 
     @GetMapping("/me")
