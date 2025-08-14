@@ -30,12 +30,11 @@ public class SolarMapper {
     private static final Logger log = LoggerFactory.getLogger(SolarMapper.class);
 
     public static SolarTimes toEntity(SolarApiResponseDto apiDto, City city, LocalDate date) {
-        LocalDate actualDate = Optional.ofNullable(date).orElse(LocalDate.now());
         SolarApiResponseDto.SolarResults results = apiDto.getResults();
-        System.out.println(apiDto.getResults().getAstronomicalTwilightBegin());
-        log.info(apiDto.getResults().getAstronomicalTwilightBegin());
+        log.info(apiDto.getResults().getCivilTwilightBegin());
+        log.debug(apiDto.toString());
         return SolarTimes.builder()
-                .date(actualDate)
+                .date(date)
                 .city(city)
                 .sunrise(parseTime(results.getSunrise()))
                 .sunset(parseTime(results.getSunset()))
@@ -49,8 +48,8 @@ public class SolarMapper {
                 .firstLight(parseTime(results.getNauticalTwilightBegin()))
                 .lastLight(parseTime(results.getNauticalTwilightEnd()))
 
-                .nightBegin(parseTime(results.getAstronomicalTwilightBegin()))
-                .nightEnd(parseTime(results.getAstronomicalTwilightEnd()))
+                .nightEnd(parseTime(results.getAstronomicalTwilightBegin()))
+                .nightBegin(parseTime(results.getAstronomicalTwilightEnd()))
                 .timeZone(apiDto.getTzid() != null ? apiDto.getTzid() : "UTC")
                 .build();
     }
@@ -91,8 +90,6 @@ public class SolarMapper {
             return Duration.ZERO;
         }
     }
-
-    // --- MAPPING FROM ENTITY TO FRONTEND DTO ---
     public static SolarResponseDto toDto(SolarTimes entity) {
         if (entity == null) {
             return null;
@@ -108,10 +105,10 @@ public class SolarMapper {
                 formatTimeForFrontend(entity.getDusk()),
                 formatTimeForFrontend(entity.getDawn()),
                 formatTimeForFrontend(entity.getFirstLight()),
-                formatTimeForFrontend(entity.getLastLight()), // Corrected: now maps nautical_twilight_end via entity.getLastLight()
+                formatTimeForFrontend(entity.getLastLight()),
                 formatTimeForFrontend(entity.getNightBegin()),
                 formatTimeForFrontend(entity.getNightEnd()),
-                Optional.ofNullable(entity.getCity())
+                Optional.ofNullable(entity.getCity())//todo
                         .map(CityMapper::toNameDto)
                         .orElse(null),
                 entity.getTimeZone()
@@ -142,6 +139,7 @@ public class SolarMapper {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+    //members' solar times display
     public static SunsetSunriseDto toSunsetSunriseDto(SolarTimes entity) {
         if (entity == null) {
             return null;

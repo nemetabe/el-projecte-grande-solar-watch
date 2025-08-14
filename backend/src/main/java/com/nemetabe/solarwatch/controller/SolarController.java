@@ -38,12 +38,13 @@ public class SolarController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         logger.info("Received request processing started in the controller method. City: {}, date: {}", city, date);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate queryDate = (date != null)? date : LocalDate.now();
-        //logger.info("Processing request asynchronously with error. City: {}, date: {} queryDate: {}", city, date, queryDate);
+        LocalDate queryDate = date != null? date : LocalDate.now();
+        if (queryDate == null) {
+            logger.info("Processing request with null value for date. values: city: {}, date: {} queryDate: {}", city, date, queryDate);
+        }
 
-        Mono<SolarResponseDto> response = solarService.getSolarInfo(city,queryDate);
-       logger.info("Received request processing completed in the controller method. Response: {}", response);
+        Mono<SolarResponseDto> response = solarService.getSolarInfo(city, queryDate);
+       logger.info("Received request processing completed in the controller method. Response: {}", response.toString());
         return response
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
