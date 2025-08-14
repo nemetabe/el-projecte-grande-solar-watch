@@ -62,7 +62,9 @@ public class SolarService {
                             }
                         })
         ).flatMap(city ->
-                Mono.fromCallable(() -> solarRepo.findFirstByDateAndCity_NameContainingIgnoreCaseOrderByDateDesc(date, city.getName()))
+                Mono.fromCallable(() -> {
+                    return solarRepo.findFirstByDateAndCity_NameContainingIgnoreCaseOrderByDateDesc(date, city.getName());
+                        })
                         .subscribeOn(Schedulers.boundedElastic())
                         .flatMap(optionalSolarData -> {
                             if (optionalSolarData.isPresent()) {

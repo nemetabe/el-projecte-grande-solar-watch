@@ -13,7 +13,7 @@ public class SSSRClient {
 
     public SSSRClient(WebClient.Builder builder) {
         this.webClient = builder
-                .baseUrl("https://api.sunrisesunset.io")
+                .baseUrl("https://api.sunrise-sunset.org")
                 .build();
     }
 
