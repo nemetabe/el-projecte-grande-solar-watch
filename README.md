@@ -112,51 +112,88 @@ Here's what's on the horizon:
 
 - **Harmonic UI/UX Touch-Ups**: We'll continue to refine the user interface and experience, focusing on achieving a seamless, aesthetic, and visually pleasing look that complements the natural beauty of the sky's colors.
 
-## Tech Stack
+## 🛠 Tech Stack
 
-Sol&R is built as a modern full-stack web application, leveraging robust technologies for both its backend and frontend, with a clear separation of concerns.
+### Backend (Java / Spring)
 
-### Backend (Java/Spring Boot)
-- **Framework**: Spring Boot 3.4.3
-- **Language**: Java 17
-- **Build Tool**: Maven
-- **Core Dependencies**:
-  - Spring Web: For building efficient RESTful APIs
-  - Spring WebFlux: Enabling reactive programming for scalable operations
-  - Spring Data JPA: Simplifying database interactions
-  - Spring Security: Handling authentication and authorization
-- **Database**:
-  - PostgreSQL: Our chosen production database
-  - H2 Database: Used for lightweight development and testing
-- **Authentication**: JWT (JSON Web Tokens) with the JJWT library for secure, stateless authentication
-- **Utilities**:
-  - Lombok: Reduces boilerplate code, keeping our codebase clean
-  - Jackson: For seamless JSON processing, including JSR310 support for modern date/time APIs
-  - Spring Dotenv: Manages environment variables securely
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)  
+**Spring Boot** `3.4.3`
+
+![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)  
+**Spring Framework (Web, WebFlux, Data JPA)**
+
+![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white)  
+**Spring Security**
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)  
+**PostgreSQL**
+
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)  
+**JWT (JJWT)**
+
+**Java** `17`  
+**Maven**  
+**H2 Database** (dev & testing)  
+**Lombok**  
+**Jackson (JSR310)**  
+**Spring Dotenv**
+
+---
 
 ### Frontend (React)
-- **Framework**: React 18.2.0
-- **Language**: JavaScript/TypeScript
-- **Build Tool**: Vite 6.3.5 for a fast development experience
-- **Routing**: React Router DOM 7.6.1 for intuitive navigation
-- **Styling**:
-  - Tailwind CSS 4.1.11: For utility-first CSS
-  - Emotion: A powerful CSS-in-JS library
-- **UI Components**: Material-UI Date Pickers enhance user interaction
-- **Date Handling**: Day.js 1.11.13 for efficient date and time manipulation
 
-### Development Tools
-- **Code Quality**: ESLint with React plugins to maintain high code standards
-- **Code Formatting**: Prettier with the Tailwind CSS plugin ensures consistent code style
-- **CSS Processing**: PostCSS with Autoprefixer for broad browser compatibility
-- **Testing**: Spring Boot Test is used for comprehensive backend testing
+![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)  
+**Vite** `6.3.5`
 
-### Architecture
-Sol&R follows a full-stack web application pattern, clearly separating the backend and frontend. It provides RESTful services with reactive programming support. Authentication is handled via JWT-based stateless authentication, and JPA/Hibernate ORM manages interactions with the PostgreSQL database. Frontend and backend communicate seamlessly via HTTP REST APIs.
+![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)  
+**React Router DOM** `7.6.1`
 
-> **Note:** While listed, MapTiler SDK, MapLibre GL, MapTiler Geocoding Control, and OGL (3D Graphics) are planned integrations and not yet actively implemented.
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)  
+**Tailwind CSS** `4.1.11`
 
-## External APIs
+![Material UI](https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white)  
+**Material UI Date Pickers**
+
+**React** `18.2.0`  
+**TypeScript / JavaScript**  
+**Emotion (CSS-in-JS)**  
+**Day.js** `1.11.13`
+
+---
+
+### Development & Tooling
+
+![Docker Compose](https://img.shields.io/badge/Docker%20Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)  
+**Docker Compose**
+
+![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)  
+**GitHub**
+
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white)  
+**IntelliJ IDEA**
+
+![VSCode](https://img.shields.io/badge/VSCode-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)  
+**VS Code**
+
+![WebStorm](https://img.shields.io/badge/WebStorm-000000?style=for-the-badge&logo=WebStorm&logoColor=white)  
+**WebStorm**
+
+![Vitest](https://img.shields.io/badge/Vitest-%236E9F18?style=for-the-badge&logo=Vitest&logoColor=%23fcd703)  
+**Vitest**
+
+**ESLint**  
+**Prettier (Tailwind plugin)**  
+**PostCSS + Autoprefixer**  
+**Spring Boot Test**
+
+---
+
+### Planned Integrations
+
+**MapTiler SDK**  
+**MapLibre GL**  
+**MapTiler Geocoding Control**  
+**OGL (3D Graphics)**
 
 Sol&R currently integrates with the following external APIs to provide accurate solar and geographical data:
 
