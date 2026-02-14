@@ -1,5 +1,6 @@
 package com.nemetabe.solarwatch.service;
 
+import com.nemetabe.solarwatch.model.exception.member.MemberIdNotFoundException;
 import com.nemetabe.solarwatch.repository.MemberRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -7,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.nemetabe.solarwatch.model.payload.MemberRegistrationDto;
 import com.nemetabe.solarwatch.model.entity.Member;
 import com.nemetabe.solarwatch.model.entity.Role;
-import com.nemetabe.solarwatch.model.exception.MemberNotFoundException;
+import com.nemetabe.solarwatch.model.exception.member.MemberNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -191,7 +192,8 @@ class MemberServiceTest {
 
     @Test
     void deleteMember_ShouldReturnTrue_WhenDeletionSuccessful() {
-        int memberId = 1;
+        Long memberId = Long.valueOf(1);
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(testMember));
         when(memberRepository.deleteMemberById(memberId)).thenReturn(true);
 
         boolean result = memberService.deleteMember(memberId);
@@ -202,12 +204,10 @@ class MemberServiceTest {
 
     @Test
     void deleteMember_ShouldReturnFalse_WhenDeletionFails() {
-        int memberId = 999;
-        when(memberRepository.deleteMemberById(memberId)).thenReturn(false);
+        Long memberId = Long.valueOf(999);
+        when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
-        boolean result = memberService.deleteMember(memberId);
-
-        assertFalse(result);
-        verify(memberRepository).deleteMemberById(memberId);
+        assertThrows(MemberIdNotFoundException.class, () -> memberService.deleteMember(memberId));
+        verify(memberRepository, never()).deleteMemberById(memberId);
     }
 }

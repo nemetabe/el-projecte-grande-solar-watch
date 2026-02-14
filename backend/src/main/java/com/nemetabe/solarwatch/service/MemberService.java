@@ -1,7 +1,14 @@
 package com.nemetabe.solarwatch.service;
 
-import com.nemetabe.solarwatch.model.exception.MemberEmailNotFound;
-import com.nemetabe.solarwatch.model.exception.MemberNameNotFound;
+import com.nemetabe.solarwatch.mapper.CityMapper;
+import com.nemetabe.solarwatch.model.dto.city.CityNameDto;
+import com.nemetabe.solarwatch.model.dto.city.CityResponseDto;
+import com.nemetabe.solarwatch.model.dto.member.MemberProfileDto;
+import com.nemetabe.solarwatch.model.entity.City;
+import com.nemetabe.solarwatch.model.exception.member.MemberEmailNotFound;
+import com.nemetabe.solarwatch.model.exception.member.MemberIdNotFoundException;
+import com.nemetabe.solarwatch.model.exception.member.MemberNameNotFound;
+import com.nemetabe.solarwatch.model.exception.member.MemberNotFoundException;
 import com.nemetabe.solarwatch.model.payload.MemberRegistrationDto;
 import com.nemetabe.solarwatch.model.entity.Member;
 import com.nemetabe.solarwatch.model.entity.Role;
@@ -13,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -37,8 +45,14 @@ public class MemberService {
 
     }
 
+    public Member findMemberById(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new MemberIdNotFoundException(id));
+    }
+
     public Member findMemberByEmail(String email){
-        return memberRepository.findByEmail(email).orElseThrow(() -> new MemberEmailNotFound(email));
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberEmailNotFound(email));
     }
 
     public Member findMemberByName(String username) {
@@ -53,8 +67,38 @@ public class MemberService {
         member.setRoles(copiedRoles);
         memberRepository.save(member);
     }
+    public MemberProfileDto setFavouriteCity(Long memberId, City city) {
+        Member member = getMember(memberId);
+        member.setFavouriteCity(city);
+        memberRepository.save(member);
+            return new MemberProfileDto(
+                member.getId(),
+                member.getName(),
+                member.getEmail(),
+                new CityNameDto(city.getId(), city.getName(), city.getCountry())
+        );
+    }
 
-//TODO
+
+
+    public CityResponseDto getFavouriteCity(Long memberId) {
+        Member member = getMember(memberId);
+        return CityMapper.toDto(member.getFavouriteCity());
+    }
+
+    private Member getMember(Long memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isEmpty()) {
+            throw new MemberIdNotFoundException(memberId);
+        }
+        return optionalMember.get();
+    }
+
+    public boolean deleteMember(Long memberId) {
+        getMember(memberId);
+        return memberRepository.deleteMemberById(memberId);
+    }
+
     public boolean register(MemberRegistrationDto registrationDto, PasswordEncoder passwordEncoder) {
         if (memberRepository.findByName(registrationDto.name()).isPresent()) {
             return false;
@@ -64,18 +108,10 @@ public class MemberService {
         member.setPassword(passwordEncoder.encode(registrationDto.password()));
         member.setEmail(registrationDto.email());
         member.setRoles(Set.of(Role.ROLE_USER));
+        member.setFavouriteCity(null);
         memberRepository.save(member);
         return true;
     }
-
-
-
-    //TODO
-    public boolean deleteMember(int id) {
-        return memberRepository.deleteMemberById(id);
-    }
-
-
 
 }
 

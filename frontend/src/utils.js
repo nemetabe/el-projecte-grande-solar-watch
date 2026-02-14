@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-
 export async function fetchData(path, method = "GET", body = null, jwt = null, hasRequestBody = true) {
     const options = {
         method,
@@ -16,14 +14,32 @@ export async function fetchData(path, method = "GET", body = null, jwt = null, h
         options.body = JSON.stringify(body);
     }
 
-    const response =  await fetch(`/api/${path}`, options);
+    try {
+        const response = await fetch(`/api/${path}`, options);
+        
+        if (response.status === 401) {
+            localStorage.setItem("solAndRJwt", null);
+            window.location.href = "/browse";
+            throw new Error("Unauthorized");
+        }
 
-    // if (response.status === 401) {
-    //     localStorage.setItem("solAndRJwt", "null");
-    //     window.location.href = "/";
-    // }
+        if (response.status === 204 || response.status === 201) {
+            return null;
+        }
 
-    if (hasRequestBody) {
-        return response.json();
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            return await response.json();
+        }
+
+        return response;
+    } catch (error) {
+        console.error('Error in fetchData:', {
+            path,
+            method,
+            error: error.message,
+            hasRequestBody
+        });
+        throw error;
     }
 }

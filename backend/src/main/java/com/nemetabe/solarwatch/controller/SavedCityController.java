@@ -1,54 +1,70 @@
 package com.nemetabe.solarwatch.controller;
 
 
-import com.nemetabe.solarwatch.model.dto.member.MemberProfileDto;
-import com.nemetabe.solarwatch.model.dto.savedCity.SaveDateRequest;
-import com.nemetabe.solarwatch.model.dto.savedCity.SavedCityDto;
-import com.nemetabe.solarwatch.service.SavedCityService;
+import com.nemetabe.solarwatch.model.dto.savedCity.SaveSolarTimesRequest;
+import com.nemetabe.solarwatch.model.dto.savedCity.SavedCityResponseDto;
+import com.nemetabe.solarwatch.model.entity.SolarDateId;
+import com.nemetabe.solarwatch.service.SavedCityQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/members/{memberId}")
+@RequestMapping("/api/saved-cities")
 public class SavedCityController {
 
-    SavedCityService savedCityService;
+    private final SavedCityQueryService savedCityQueryService;
 
     @Autowired
-    public SavedCityController(SavedCityService savedCityService) {
-        this.savedCityService = savedCityService;
+    public SavedCityController(SavedCityQueryService savedCityQueryService) {
+        this.savedCityQueryService = savedCityQueryService;
     }
 
-    @PostMapping("/saved-cities")
+    @PostMapping("/members/{memberId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public SavedCityDto saveCity(@PathVariable Long memberId, @RequestBody SaveDateRequest request) {
-        return savedCityService.saveDateForMember(memberId, request.cityId(), request.savedDate());
+    public Mono<SavedCityResponseDto> saveCity(
+            @PathVariable Long memberId,
+            @RequestBody SaveSolarTimesRequest request) {
+        return savedCityQueryService.saveDate(memberId, request.cityId(), request.solarTimesId());
     }
 
-    @GetMapping("/saved-cities")
-    public List<SavedCityDto> getSavedCities(@PathVariable Long memberId) {
-        return savedCityService.getSavedCitiesByMemberId(memberId);
+    @GetMapping("/members/{memberId}")
+    public Mono<List<SavedCityResponseDto>> getSavedCities(@PathVariable Long memberId) {
+        return savedCityQueryService.getSavedCities(memberId);
     }
 
-    @GetMapping("/saved-cities/{cityId}/dates")
-    public List<LocalDate> getDatesForCity(@PathVariable Long memberId, @PathVariable Long cityId) {
-        return savedCityService.getSavedDatesForCityByMember(memberId, cityId);
+    @GetMapping("/{savedCityId}")
+    public Mono<SavedCityResponseDto> getSavedCity(@PathVariable Long savedCityId) {
+        return savedCityQueryService.getSavedCity(savedCityId);
     }
 
-    //todo
-    @PutMapping("/favourite-city/{cityId}")
-    @ResponseStatus(HttpStatus.OK)
-    public MemberProfileDto setFavouriteCity(@PathVariable Long memberId, @PathVariable Long cityId) {
-        return savedCityService.setFavouriteCity(memberId, cityId);
+    @GetMapping("/members/{memberId}/cities/{cityId}")
+    public Mono<SavedCityResponseDto> getSavedCity(
+            @PathVariable Long memberId,
+            @PathVariable Long cityId
+    ){
+        return savedCityQueryService.getSavedCity(memberId, cityId);
     }
 
-//    @GetMapping("/favourite-city")
-//    public MemberProfileDto getFavouriteCity(@PathVariable Long memberId) {
-//        return savedCityService.
-//    }
+    @GetMapping("/{savedCityId}/members/{memberId}/dates")
+    public Mono<List<SolarDateId>> getDatesForCity(
+            @PathVariable Long memberId,
+            @PathVariable Long savedCityId) {
+        return savedCityQueryService.getSolarDates(memberId, savedCityId);
+    }
 
+    @DeleteMapping("/{savedCityId}")
+    public Mono<Void> deleteCity(@PathVariable Long savedCityId) {
+        return savedCityQueryService.deleteSavedCityById(savedCityId);
+    }
+
+    @DeleteMapping("/{savedCityId}/members/{memberId}")
+    public Mono<Void> deleteCity(
+            @PathVariable Long memberId,
+            @PathVariable Long savedCityId) {
+        return savedCityQueryService.deleteSavedCityByMemberAndCity(memberId, savedCityId);
+    }
 }

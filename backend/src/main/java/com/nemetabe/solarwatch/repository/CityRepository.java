@@ -12,6 +12,6 @@ public interface CityRepository extends JpaRepository<City, Long> {
     Optional<City> findCityByNameIgnoreCase(String name);
     Optional<City> findCityById(Long id);
     Optional<City> findCityByLatitudeAndLongitude(double latitude, double longitude);
-
+    Optional<City> findByCountryIgnoreCaseAndNameIgnoreCase(String name, String country);
 
 }

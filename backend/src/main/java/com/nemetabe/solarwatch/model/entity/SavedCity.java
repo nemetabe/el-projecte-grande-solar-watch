@@ -1,19 +1,15 @@
 package com.nemetabe.solarwatch.model.entity;
-
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
-
-@Entity
-@Table(name = "saved_cities")
-@Getter
-@Setter
+@Entity @Builder
+@Table(name = "saved_cities", uniqueConstraints = @UniqueConstraint(columnNames = {"city_id", "member_id"}))
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class SavedCity {
 
     @Id
@@ -29,8 +25,17 @@ public class SavedCity {
     private Member member;
 
     @ElementCollection
-    @CollectionTable(name = "saved_dates", joinColumns = @JoinColumn(name = "saved_city_id"))
-    @Column(name = "saved_date")
-    private Set<LocalDate> savedDates;
+    @CollectionTable(
+            name = "solar_date_id",
+            joinColumns = @JoinColumn(name = "saved_city_id")
+    )
+    private Set<SolarDateId> solarDateIds = new HashSet<>();
 
+    public void addSolarDateId(SolarDateId solarDateId) {
+        solarDateIds.add(solarDateId);
+    }
+
+    public void removeSolarDateId(SolarDateId solarDateId) {
+        solarDateIds.remove(solarDateId);
+    }
 }

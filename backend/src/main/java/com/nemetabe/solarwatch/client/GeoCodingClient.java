@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 public class GeoCodingClient {
@@ -19,16 +20,24 @@ public class GeoCodingClient {
                 .build();
     }
 
-    public Flux<GeocodingDataDto> fetchCities(String cityName) {
+    public Flux<GeocodingDataDto> fetch(String cityName, int limit) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/geo/1.0/direct")
                         .queryParam("q", cityName)
-                        .queryParam("limit", 5)
+                        .queryParam("limit", limit)
                         .queryParam("appid", API_KEY)
                         .build())
                 .retrieve()
                 .bodyToFlux(GeocodingDataDto.class);
+    }
+
+    public Flux<GeocodingDataDto> fetchCities(String cityName) {
+        return fetch(cityName, 5);
+    }
+
+    public Mono<GeocodingDataDto> fetchCity(String cityName) {
+        return fetch(cityName, 1).single();
     }
 }
 
