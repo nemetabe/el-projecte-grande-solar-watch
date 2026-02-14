@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite'; // Import the Tailwind CSS Vite plu
 export default defineConfig({
     server: {
     proxy: {
-      "/api": "http://localhost:8080/",
+      "/api": "http://localhost:8081/",
     },
   }, // Ensure defineConfig is used for a proper Vite config
   plugins: [
@@ -18,7 +18,9 @@ export default defineConfig({
       '@mui/material',
       '@mui/system',
       '@emotion/react',
-      '@emotion/styled'
+      '@emotion/styled',
+      '@headlessui/react',
+      '@heroicons/react'
     ],
   },
 });

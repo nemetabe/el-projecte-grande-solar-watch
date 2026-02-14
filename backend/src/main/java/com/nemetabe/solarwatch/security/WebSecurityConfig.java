@@ -64,8 +64,10 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
-                            .requestMatchers("/api/member/**").permitAll()
-                            .requestMatchers("/api/solar/**").permitAll()//.hasRole("USER") //TODO
+                            .requestMatchers("/api/members/auth/**").permitAll()
+                            .requestMatchers("/api/solar/**").permitAll()//.hasRole("USER")
+                            .requestMatchers("/api/cities/**").permitAll()//.hasRole("USER")
+                            .requestMatchers("/api/saved-cities/**").permitAll()//.hasRole("USER")
                             .requestMatchers("/error").permitAll()
                             .anyRequest().authenticated()
                 );

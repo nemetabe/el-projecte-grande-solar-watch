@@ -1,4 +1,7 @@
 import { useRouteError } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import {useEffect} from "react";
+import app from "../App.jsx";
 
 const ErrorPage = () => {
   const error = useRouteError();

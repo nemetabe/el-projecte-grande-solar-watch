@@ -1,27 +1,27 @@
 package com.nemetabe.solarwatch.mapper;
 
-import com.nemetabe.solarwatch.model.dto.city.CityNameDto;
+
 import com.nemetabe.solarwatch.model.dto.api.sssr.SolarApiResponseDto;
+import com.nemetabe.solarwatch.model.dto.savedCity.SavedCityResponseDto;
 import com.nemetabe.solarwatch.model.dto.solar.SolarResponseDto;
 import com.nemetabe.solarwatch.model.dto.solar.SunsetSunriseDto;
 import com.nemetabe.solarwatch.model.entity.City;
+import com.nemetabe.solarwatch.model.entity.SavedCity;
 import com.nemetabe.solarwatch.model.entity.SolarTimes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.DateTimeException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Optional;
 
-@Service
+@Component
 public class SolarMapper {
 
     private static final DateTimeFormatter apiInputFormatter = DateTimeFormatter.ofPattern("h:mm:ss a", Locale.US);
@@ -29,30 +29,86 @@ public class SolarMapper {
 
     private static final Logger log = LoggerFactory.getLogger(SolarMapper.class);
 
+    public static SavedCityResponseDto getSavedCityResponseDtoFrom(SavedCity savedCity) {
+        return new SavedCityResponseDto(
+                savedCity.getId(),
+                savedCity.getCity().getCountry(),
+                savedCity.getCity().getName(),
+                new ArrayList<>(savedCity.getSolarDateIds())
+        );
+    }
     public static SolarTimes toEntity(SolarApiResponseDto apiDto, City city, LocalDate date) {
-        LocalDate actualDate = Optional.ofNullable(date).orElse(LocalDate.now());
-        SolarApiResponseDto.SolarResults results = apiDto.getResults();
-        System.out.println(apiDto.getResults().getAstronomicalTwilightBegin());
-        log.info(apiDto.getResults().getAstronomicalTwilightBegin());
-        return SolarTimes.builder()
-                .date(actualDate)
-                .city(city)
-                .sunrise(parseTime(results.getSunrise()))
-                .sunset(parseTime(results.getSunset()))
+        log.debug(apiDto.toString());
+        return buildSolarEntity(apiDto, city, date);
+    }
 
-                .solarNoon(parseTime(results.getSolarNoon()))
-                .dayLength(parseDuration(results.getDayLength()))
+    public static SolarResponseDto toDto(SolarTimes entity) {
+        if (entity == null) {
+            return null;
+        }
+        return buildSolarDto(entity);
+    }
+    public static SunsetSunriseDto toSunsetSunriseDto(SolarTimes entity) {
+        if (entity == null) {
+            return null;
+        }
+        return new SunsetSunriseDto(
+                entity.getSunset(),
+                entity.getSunrise(),
+                CityMapper.toNameDto(entity.getCity()),
+                entity.getDate());
+    }
 
-                .dawn(parseTime(results.getCivilTwilightBegin()))
-                .dusk(parseTime(results.getCivilTwilightEnd()))
+    private static SolarResponseDto buildSolarDto(SolarTimes entity) {
+        return SolarResponseDto.builder()
+                .id(entity.getId())
+                .date(entity.getDate())
+                .sunrise(formatTimeForFrontend(entity.getSunrise()))
+                .sunset(formatTimeForFrontend(entity.getSunset()))
 
-                .firstLight(parseTime(results.getNauticalTwilightBegin()))
-                .lastLight(parseTime(results.getNauticalTwilightEnd()))
+                .solarNoon(formatTimeForFrontend(entity.getSolarNoon()))
+                .dayLength(formatDuration(entity.getDayLength()))
 
+<<<<<<< Updated upstream
                 .nightBegin(parseTime(results.getAstronomicalTwilightBegin()))
                 .nightEnd(parseTime(results.getAstronomicalTwilightEnd()))
                 .timeZone(apiDto.getTzid() != null ? apiDto.getTzid() : "UTC")
+=======
+                .dusk(formatTimeForFrontend(entity.getDusk()))
+                .dawn(formatTimeForFrontend(entity.getDawn()))
+
+                .firstLight(formatTimeForFrontend(entity.getFirstLight()))
+                .lastLight(formatTimeForFrontend(entity.getLastLight()))
+
+                .nightBegin(formatTimeForFrontend(entity.getNightBegin()))
+                .nightEnd(formatTimeForFrontend(entity.getNightEnd()))
+                .city(CityMapper.toNameDto(entity.getCity()))
+                .timeZone(entity.getTimeZone())
+>>>>>>> Stashed changes
                 .build();
+    }
+
+    private static SolarTimes buildSolarEntity(
+            SolarApiResponseDto apiResponseDto,
+            City city,
+            LocalDate date)
+    {
+        SolarApiResponseDto.SolarResults results = apiResponseDto.getResults();
+        SolarTimes sTimes = new SolarTimes();
+        sTimes.setDate(date);
+        sTimes.setCity(city);
+        sTimes.setSunrise(parseTime(results.getSunrise()));
+        sTimes.setSunset(parseTime(results.getSunset()));
+        sTimes.setSolarNoon(parseTime(results.getSolarNoon()));
+        sTimes.setDayLength(parseDuration(results.getDayLength()));
+        sTimes.setDawn(parseTime(results.getCivilTwilightBegin()));
+        sTimes.setDusk(parseTime(results.getCivilTwilightEnd()));
+        sTimes.setFirstLight(parseTime(results.getNauticalTwilightBegin()));
+        sTimes.setLastLight(parseTime(results.getNauticalTwilightEnd()));
+        sTimes.setNightBegin(parseTime(results.getAstronomicalTwilightBegin()));
+        sTimes.setNightEnd(parseTime(results.getAstronomicalTwilightEnd()));
+        sTimes.setTimeZone(apiResponseDto.getTzid() != null ? apiResponseDto.getTzid() : "UTC");
+        return sTimes;
     }
 
     private static LocalTime parseTime(String timeStr) {
@@ -91,6 +147,7 @@ public class SolarMapper {
             return Duration.ZERO;
         }
     }
+<<<<<<< Updated upstream
 
     // --- MAPPING FROM ENTITY TO FRONTEND DTO ---
     public static SolarResponseDto toDto(SolarTimes entity) {
@@ -117,6 +174,8 @@ public class SolarMapper {
                 entity.getTimeZone()
         );
     }
+=======
+>>>>>>> Stashed changes
 
     private static String formatTimeForFrontend(LocalTime time) {
         if (time == null) {
@@ -130,7 +189,7 @@ public class SolarMapper {
         }
     }
 
-    private static String formatDurationForFrontend(Duration duration) {
+    private static String formatDuration(Duration duration) {
         if (duration == null) {
             return "00:00:00";
         }
@@ -142,6 +201,7 @@ public class SolarMapper {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+<<<<<<< Updated upstream
     public static SunsetSunriseDto toSunsetSunriseDto(SolarTimes entity) {
         if (entity == null) {
             return null;
@@ -154,4 +214,6 @@ public class SolarMapper {
                         .orElse(null),
                 entity.getDate());
     }
+=======
+>>>>>>> Stashed changes
 }

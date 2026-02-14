@@ -1,5 +1,7 @@
 package com.nemetabe.solarwatch.service;
 
+import com.nemetabe.solarwatch.model.exception.member.MemberIdNotFoundException;
+import com.nemetabe.solarwatch.repository.CityRepository;
 import com.nemetabe.solarwatch.repository.MemberRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -43,21 +45,25 @@ class MemberServiceTest {
     @Mock
     private SecurityContext securityContext;
 
+    @Mock
+    private CityRepository cityRepository;
+
     private MemberService memberService;
     private Member testMember;
     private MemberRegistrationDto registrationDto;
 
     @BeforeEach
     void setUp() {
-        memberService = new MemberService(memberRepository);
-
+        cityRepository = mock(CityRepository.class);
+        memberService = new MemberService(memberRepository, cityRepository);
         testMember = new Member();
         testMember.setName("testuser");
         testMember.setEmail("test@example.com");
         testMember.setPassword("encodedPassword");
         testMember.setRoles(Set.of(Role.ROLE_USER));
 
-        registrationDto = new MemberRegistrationDto("newuser", "new@example.com", "password123");
+        registrationDto = new MemberRegistrationDto(
+                "newuser", "new@example.com", "password123", "Budapest");
     }
 
     @Test

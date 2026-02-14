@@ -2,11 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-/* .modak-regular {
-  font-family: "Modak", system-ui;
-  font-weight: 400;
-  font-style: normal;
-} */
+h1 {
+    font-family: "Flavors", cursive;
+    font-size: 4rem;
+    color: rgb(0, 0, 0);
+}
+
+h2 {
+    font-family: "Flavors", cursive;
+    font-size: 3rem;
+    color: rgb(0, 0, 0);
+}  /*TODO*/
+h3 {
+    font-family: "Flavors", cursive;
+    font-size: 4rem;
+    color: rgb(255, 255, 255);
+
+}
+h4 {
+    font-family: "Flavors", cursive;
+    font-size: 3rem;
+    color: rgb(255, 115, 0);
+    border: #222222;
+    border-width: 222px;
+}
+h5 {
+    font-family: "Flavors", cursive;
+    font-size: 2rem;
+    color: rgb(0, 0, 0);
+    border: #ff8282;
+    border-width: 222px;
+}
+
+h6 {
+    font-family: "Flavors", cursive;
+    font-size: 3rem;
+}
+h7 {
+    font-family: "Flavors", cursive;
+    font-size: 1.5rem;
+    color: rgb(0, 0, 0);
+}
+
+h8 {
+    font-family: "Flavors", cursive;
+    font-size: 1rem;
+}
 
 a {
   text-decoration: none !important;

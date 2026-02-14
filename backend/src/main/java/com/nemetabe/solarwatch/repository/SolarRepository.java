@@ -15,12 +15,10 @@ import java.util.Optional;
 public interface SolarRepository extends JpaRepository<SolarTimes, Long> {
 
 
-    @Query("SELECT s FROM SolarTimes s JOIN FETCH s.city WHERE s.city.name = :cityName AND s.date = :date")
-    Optional<SolarTimes> findByCityNameAndDate(@Param("cityName") String cityName, @Param("date") LocalDate date);
+//    @Query("SELECT s FROM SolarTimes s JOIN FETCH s.city WHERE s.city.name = :cityName AND s.date = :date")
+//    Optional<SolarTimes> findByCityNameAndDate(@Param("cityName") String cityName, @Param("date") LocalDate date);
 
-    Optional<SolarTimes> findFirstByDateAndCity_NameContainingIgnoreCaseOrderByDateDesc(LocalDate date, String cityName);
+    Optional<SolarTimes> findByCityAndDate(City city, LocalDate date);
 
-    Optional<SolarTimes> findByDateAndCity_NameContainingIgnoreCaseOrderByDateDesc(LocalDate localDate, String cityName);
-
-    List<SolarTimes> findAllByCity_NameAndCity_Country(String cityName, String country);
+//    Optional<SolarTimes> findByDateAndCity_NameContainingIgnoreCaseOrderByDateDesc(LocalDate localDate, String cityName);
 }

@@ -3,6 +3,7 @@ package com.nemetabe.solarwatch.controller;
 import com.nemetabe.solarwatch.model.payload.MemberLoginDto;
 import com.nemetabe.solarwatch.model.payload.MemberRegistrationDto;
 import com.nemetabe.solarwatch.model.payload.JwtResponseDto;
+import com.nemetabe.solarwatch.repository.CityRepository;
 import com.nemetabe.solarwatch.security.jwt.JwtUtils;
 import com.nemetabe.solarwatch.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,17 @@ public class MemberController {
         User user = (User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         return "Hello " + user.getUsername();
+    }
+
+    @GetMapping("/{memberId}/favourite-city")
+    public CityResponseDto getFavouriteCity(@PathVariable Long memberId) {
+        return memberService.getFavouriteCity(memberId);
+    }
+
+    @PutMapping("/{memberId}/favourite-city/{cityId}")
+    public MemberProfileDto updateFavouriteCity(@PathVariable Long memberId, @PathVariable Long cityId) {
+        City favCity = cityRepository.findCityById(cityId).orElseThrow(()-> new CityNotFoundException(cityId.toString()));
+        return memberService.setFavouriteCity(memberId, favCity);
     }
 
     @DeleteMapping("/{id}")

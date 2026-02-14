@@ -4,9 +4,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.jsx'; 
 import Home from './pages/Home.jsx';
 import Browse from './pages/Browse.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
+import AccountPage from './pages/Account.jsx';
+import Me from './pages/Me.jsx';
 import ErrorPage from './components/ErrorPage.jsx';
+import UserAuthenticationPage from "./pages/Authentication.jsx";
 
 
 const router = createBrowserRouter([
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: 'browse',
+        path: 'browse/city/:city/date/:date',
         element: <Browse />,
       },
       {
@@ -28,9 +29,13 @@ const router = createBrowserRouter([
         element: <Login />
       },
       {
-        path: 'register',
-        element: <Register />
+        path: 'account',
+        element: <AccountPage />
       },
+      {
+        path: 'me',
+        element: <Me />
+      }
     ]
   }
 ]);

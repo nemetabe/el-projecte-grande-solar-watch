@@ -2,9 +2,11 @@ package com.nemetabe.solarwatch.model.dto.solar;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nemetabe.solarwatch.model.dto.city.CityNameDto;
+import lombok.Builder;
 
 import java.time.LocalDate;
 
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SolarResponseDto(
         Long id,

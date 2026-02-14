@@ -19,10 +19,10 @@ public class JwtUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${codecool.app.jwtSecret}")
+    @Value("${nemetabe.app.jwt.secret}")
     private String jwtSecret;
 
-    @Value("${codecool.app.jwtExpirationMs}")
+    @Value("${nemetabe.app.jwt.expirationMs}")
     private int jwtExpirationMs;
 
 

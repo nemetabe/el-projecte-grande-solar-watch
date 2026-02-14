@@ -14,6 +14,10 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @SequenceGenerator(name="seq", initialValue=2, allocationSize=100)
 public class Member {
 

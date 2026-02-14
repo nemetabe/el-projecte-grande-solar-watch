@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "solar_times")
+@Table(name = "solar_times", uniqueConstraints = @UniqueConstraint(columnNames = {"date", "city_id"}))
 @Getter
 @Setter
 @NoArgsConstructor // Required for JPA
@@ -21,6 +21,10 @@ public class SolarTimes {
 
     @Column(nullable = false)
     private LocalDate date;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
 
     @Column(nullable = false)
     private LocalTime sunrise; // Corresponds to API "sunrise"
@@ -40,7 +44,8 @@ public class SolarTimes {
 
     // Nautical
     private LocalTime firstLight; // Corresponds to API "nautical_twilight_begin"
-    private LocalTime lastLight;  // Corresponds to API "nautical_twilight_end" <-- This is the key change to map
+    @Column(nullable = false)
+    private LocalTime lastLight;  // Corresponds to API "nautical_twilight_end"
 
     // Astronomical
     private LocalTime nightBegin; // Corresponds to API "astronomical_twilight_end"
@@ -48,8 +53,4 @@ public class SolarTimes {
 
     @Column(nullable = false)
     private String timeZone; // Corresponds to API "tzid"
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "city_id", nullable = false)
-    private City city;
 }
