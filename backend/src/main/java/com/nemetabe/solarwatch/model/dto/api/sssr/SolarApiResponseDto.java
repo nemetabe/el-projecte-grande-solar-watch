@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SolarApiResponseDto {
 
@@ -47,5 +48,8 @@ public class SolarApiResponseDto {
 
         @JsonProperty("astronomical_twilight_end")
         private String astronomicalTwilightEnd;
+
+
     }
+
 }

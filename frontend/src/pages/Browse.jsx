@@ -1,18 +1,40 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
-//import Map from "../components/map/Map.jsx";
 import DateSelector from "../components/DateSelector.jsx";
 import { fetchData } from "../utils.js";
 import { Box } from '@mui/material';
+import SolarReportCard from "../components/SolarReportCard.jsx";
+import Skeleton from '@mui/material/Skeleton';
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import {CityNameCard} from "../components/CityNameCard.jsx";
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import {SolarCard} from "../components/SolarCard.jsx";
+import Container from "@mui/material/Container";
 
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: (theme.vars ?? theme).palette.text.secondary,
+    ...theme.applyStyles('dark', {
+        backgroundColor: '#1A2027',
+    }),
+}));
 
 const Browse = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(0);
+  const [saved, setSaved] = useState(0);
+  const [cityId, setCityId] = useState(null)
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [currentCity, setCurrentCity] = useState("Budapest");
   const [solarTimes, setSolarTimes] = useState(null);
+  const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
+
 
   useEffect(() => {
     fetchSolarData(currentDate, currentCity);
@@ -23,48 +45,78 @@ const Browse = () => {
     
   }, [submitted]);
 
-  const fetchSolarData = async (date, city) => {
+    const getFormattedUrl =(date, city) =>{
+        const formattedDate = dayjs(date).format("YYYY-MM-DD");
+        return `solar?date=${formattedDate}&city=${city}`;
+    }
+
+    const handleHistory = (temp, prev) =>{
+        if (!temp || !temp.city) return prev;
+
+        const isDuplicate = prev.some(item =>
+            item?.city?.id === temp.city.id ||
+            (item?.city?.city === temp.city.city && item?.city?.country === temp.city.country)
+        );
+
+        if (isDuplicate) return prev;
+
+        return [temp, ...prev];
+    }
+
+    function getErrorMessage(error) {
+        console.error("Failed to fetch solar data:", error);
+
+        let errorMessage = "Failed to load solar data: ";
+        if (error.message !== null && error.message.includes("JSON")) {
+            errorMessage += "Server response format error.";
+        } else if (error.message.includes("HTTP error")) {
+            errorMessage += "Server error occurred.";
+        } else {
+            errorMessage += "Please try again.";
+        }
+        return errorMessage;
+    }
+
+    const fetchSolarData = async (date, city)=>  {
     setIsLoading(true);
     setError(null);
-    
-    try {
-      const formattedDate = dayjs(date).format("YYYY-MM-DD");
-      const url = `/solar?date=${formattedDate}&city=${city}`;
-      console.log("Fetching from URL:", url);
-      
-      const data = await fetchData(url);
-      console.log("Response received:", data);
-    
-      if (!data || typeof data !== 'object') {
-        throw new Error("Invalid response data structure");
-      }
-      
-      setSolarTimes({
-        sr: data.sunrise,
-        ss: data.sunset,
-        name: data.city?.name || "Unknown Location",
-        country: data.city?.country || "Unknown Country",
-        sn: data.solarNoon,
-        date: (data.date[0] + "/" + data.date[1] + "/" + data.date[2])
-      });
+
+        try {
+
+            const data = await fetchData(getFormattedUrl(date, city));
+            const temp = solarTimes;
+
+            if (!data || typeof data !== 'object') {
+                throw new Error("Invalid response data structure");
+            }
+
+            setSolarTimes(data);
+            setHistory(prev => {
+                return handleHistory(temp, prev);
+            });
     } catch (error) {
-      console.error("Failed to fetch solar data:", error);
-      
-      let errorMessage = "Failed to load solar data. ";
-      if (error.message.includes("JSON")) {
-        errorMessage += "Server response format error.";
-      } else if (error.message.includes("HTTP error")) {
-        errorMessage += "Server error occurred.";
-      } else {
-        errorMessage += "Please try again.";
-      }
-      
-      setError(errorMessage);
+            setError(getErrorMessage(error));
       setSolarTimes(null);
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(()=> {
+    if(cityId !== null && solarTimes !== null){
+      saveCity(cityId, solarTimes.id)
+    }
+  }, [saved])
+
+  const saveCity = async (cityId, solarTimesId) => {
+    await fetchData(`members/${localStorage.getItem("memberId")}/saved-cities`, "POST", {cityId:cityId, solarTimesId: solarTimesId},
+      localStorage.getItem("solAndRJwt"))
+  }
+
+  const handleSave = (cityId) =>{
+      setCityId(cityId);
+      setSaved(prev => prev+1)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -79,72 +131,115 @@ const Browse = () => {
   const handleDateChange = (newDate) => {
     setCurrentDate(newDate || dayjs());
   };
-
   const handleCityNameChange = (name) => {
     setCurrentCity(name);
   };
 
-  return (
-    <div className="p4 m2">
-      {/* Header Section */}
-      <div className="mb-4 mt-4">
-        {isLoading && (
-          <h3 className="text-white text-2xl">
-            Just a moment, your content is loading...
-          </h3>
-        )}
-        
+  return (<Stack direction={"row"} spacing={1} sx={{
+      justifyContent: "space-between",
+          alignItems: "flex-start" ,
+          minWidth: 0,
+        overflow: "hidden"}}
+      >
+<Item>
+    <Box sx={{
+        borderRadius: 2,
+        boxShadow: 2}}
+    >
         {error && (
           <div className="m1 text-red-400 text-lg p3">
             {error}
           </div>
         )}
-      </div>
-      {/* Solar Times Display */}
-      {solarTimes !== null && (
-        <div className="block p4">
-          <h2>{solarTimes.name + "  - " + solarTimes.country}</h2>
-          <h3>{solarTimes.date}</h3>
-          <h3>sunrise: {solarTimes.sr}</h3>
-          <h3>noon: {solarTimes.sn}</h3>
-          <h3>sunset: {solarTimes.ss}</h3>
-        </div>
-      )}    
+    </Box>
+</Item>
+          <Item>
+          <Box sx={{
+          p: 7,
+          borderRadius: 2,
+          boxShadow: 2,
+      }}>
 
-      {/* Form Section */}
-      <Box className="m1">
+      {solarTimes !== null && (solarTimes.city.id !== null)&& (
+          <SolarCard
+              solarTimes={solarTimes}
+              onSave={handleSave}
+              solarCityId={solarTimes.city.id}/>
+      )}
+      </Box>
+          </Item>
 
-      <form className="blur-30 p6" onSubmit={handleSubmit}>
-        <div className="p6 mb-3">
-          <label htmlFor="cityName" className="m2"> select a city
-            <input 
-              id="cityName" 
-              className="w-full px-3 py-2 rounded"
-              type="text" 
-              value={currentCity} 
+          <Item>
+          <Box sx={{
+          p: 7,
+          borderRadius: 2,
+          boxShadow: 2,
+          }}>
+              {isLoading && (
+                  <div>
+                      <Skeleton animation="wave" variant="circular" width={40} height={40} />
+                      <Skeleton animation="wave" variant="rounded" width={40} height={40} />
+                  </div>
+              )}
+      <form className="" onSubmit={handleSubmit}>
+          <label htmlFor="cityName" className="m5">
+              <h8> select a city</h8>
+            <input
+              id="cityName"
+              className=""
+              type="text"
+              value={currentCity}
               onChange={e => handleCityNameChange(e.target.value)}
               required={true}
               />
           </label>
-        </div>
 
-        <div className="p4 m3">
-          <DateSelector 
-            date={currentDate} 
-            onDateChange={handleDateChange} 
+
+          <DateSelector
+            date={currentDate}
+            onDateChange={handleDateChange}
             />
-        </div>
 
-        <button 
-          type="submit" 
+
+        <button
+          type="submit"
           disabled={isLoading}
-          className="bg-blue-600 m1 hover:bg-blue-700 disabled:bg-gray-500 text-white px-6 py-2 rounded transition-colors"
+          className="bg-blue-600 mb-5 pb-5 bb-4 hover:bg-blue-700 disabled:bg-gray-500 text-white px-6 py-2 rounded transition-colors"
           >
           {isLoading ? "Loading..." : "Let's go!"}
         </button>
       </form>
     </Box>
-    </div>
+          </Item>
+
+          <Item>
+
+          {history && history.length > 0 ? (
+            <Stack
+                direction="column-reverse"
+                spacing={2}
+               sx={{
+                   justifyContent: "flex-end",
+                   alignItems: "",
+                   minWidth: 0,
+                   overflow: "hidden"
+               }}>
+                {history.map((search) => (
+                    search?.city && (
+                        <Item key={search.city.id}>
+                            <CityNameCard city={search.city.name} country={search.city.country} id={search.city.id} />
+                        </Item>
+                    )
+                ))}
+            </Stack>
+        ) : (
+           <h7>
+                No search history found. Start by saving some cities from the Browse page.
+           </h7>
+
+        )}
+          </Item>
+    </Stack>
   );
 };
 

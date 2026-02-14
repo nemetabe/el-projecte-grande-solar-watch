@@ -8,10 +8,10 @@ export default defineConfig({
     proxy: {
       "/api": "http://localhost:8080/",
     },
-  }, // Ensure defineConfig is used for a proper Vite config
+  },
   plugins: [
     react(),
-    tailwindcss(), // Add the Tailwind CSS v4 plugin here
+    tailwindcss(),
   ],
   optimizeDeps: {
     include: [
