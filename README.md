@@ -1,34 +1,229 @@
-# Sol&R: Your Modern Day Solar Watch
+### Sol&R: Your Modern Day Solar Watch
 
 Are you tired of endlessly sifting through Google searches and cluttered web pages just to find out when the sun sets tonight or when solar noon hits for your upcoming trip? Sol&R is here to simplify your life. It's a modern solar watch designed to cut through the noise and provide you with the most essential solar event times: sunrise, sunset, and solar noon, for any city, on any given date.
 
 Sol&R is built to ease the tracking of solar events, making it the go-to app for anyone who gets overwhelmed by excessive online searching. While still evolving, Sol&R already offers a subtle visual experience, reflecting the colors of the sky at specific times throughout the day. Our long-term vision is to empower average users to easily search, plan, save, and explore what they can expect the sky to look like, making Sol&R the ultimate resource for understanding the sun's movement and the sky's appearance.
 
-## Getting Started
+Here is your modified README setup section, rewritten to use Docker instead of manual .env export and manual backend/frontend startup. Only the setup parts are changed as requested.
 
-To get Sol&R up and running on your local machine, follow these steps.
+⸻
 
-### ⚠️ Docker Notice ⚠️
-Docker setup is currently not functional. Please proceed with the manual environment setup instructions below.
+## Sol&R: Your Modern Day Solar Watch
 
-### Environment Files
+# Getting Started
 
-The application uses environment variables for configuration. Copy the provided `.env.example` files and rename them to `.env`:
+To get Sol&R running on your local machine using Docker, follow these steps.
 
+⸻
+
+🐳 Docker Setup (Recommended)
+
+Sol&R is fully containerized using Docker Compose. This will automatically start:
+	•	PostgreSQL database
+	•	Spring Boot backend
+	•	React frontend
+	•	Nginx reverse proxy
+
+No manual environment exporting or local PostgreSQL installation is required.
+
+⸻
+
+# Prerequisites
+
+Make sure you have installed:
+	•	Docker
+	•	Docker Compose
+
+Verify installation:
 ```bash
+docker --version
+docker compose version
+```
+
+⸻
+
+## Environment Files
+
+Copy the example environment files:
+
 # Root config
+```bash
 cp .env.example .env
+```
 
 # Backend config
+```bash
 cd backend
-cp .env.example .env
+cp src/.env.example src/.env
+```
 
 # Frontend config
+```bash
 cd ../frontend
 cp .env.example .env
 ```
 
-**Important:** Edit each `.env` file with your local values (e.g., database credentials, JWT secret, API URLs).
+
+⸻
+
+# Backend Environment Configuration (Docker)
+
+Edit:
+
+backend/src/.env
+
+Use Docker service name db as host:
+
+```
+DB_URL=jdbc:postgresql://db:5432/solarwatchdb
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+
+JWT_SECRET=your_jwt_secret_key
+JWT_EXP=3600000
+```
+Important:
+db is the Docker Compose service name. Docker automatically resolves it.
+
+⸻
+
+# Build and Start the Application
+
+From the project root directory:
+```bash
+docker compose up --build
+```
+
+This will:
+	•	Build backend image
+	•	Build frontend image
+	•	Start PostgreSQL
+	•	Start Spring Boot API
+	•	Start Nginx
+	•	Connect everything automatically
+
+⸻
+
+## Access the Application
+
+Once running, access:
+
+# Frontend:
+
+```bash
+http://localhost
+```
+
+# Backend API:
+
+```bash
+http://localhost:8080/api/solar
+```
+
+Example:
+
+```bash
+curl "http://localhost:8080/api/solar?city=Budapest"
+```
+
+⸻
+
+# Stop the Application
+```bash
+docker compose down
+```
+
+
+⸻
+
+# Stop and Remove Everything (including database)
+```bash
+docker compose down -v
+```
+
+
+⸻
+
+# Rebuild After Code Changes
+```bash
+docker compose up --build
+```
+
+
+⸻
+
+# View Logs
+
+All services:
+```bash
+docker compose logs -f
+```
+
+Specific service:
+```bash
+docker compose logs -f api
+```
+
+or
+```bash 
+docker compose logs -f db
+```
+
+
+⸻
+
+## Docker Services Overview
+
+Service	/Container Name	    /Port	  /Description
+PostgreSQL	/solarwatch-db	/5432	/Database
+Backend API	/solarwatch-api	/8080	/Spring Boot API
+Frontend	/solarwatch-frontend	/internal	/React app
+Nginx	/nginx	/80	/Reverse proxy
+
+
+⸻
+
+# Database Notes
+
+Docker automatically creates:
+
+Database: solarwatchdb
+Username: postgres
+Password: postgres
+Host: db
+Port: 5432
+
+No manual database setup required.
+
+⸻
+
+First Startup May Take Time
+
+The first run may take 1–3 minutes due to:
+	•	Maven dependency download
+	•	npm dependency install
+	•	Docker image build
+
+Subsequent runs will be much faster.
+
+⸻
+
+# Development Workflow
+
+Start:
+```bash
+docker compose up
+```
+
+Stop:
+```bash
+docker compose down
+```
+
+Rebuild after code changes:
+```bash
+docker compose up --build
+```
 
 ### ⚠️ Security Guidelines ⚠️
 
