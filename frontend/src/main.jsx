@@ -4,9 +4,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from './App.jsx'; 
 import Home from './pages/Home.jsx';
 import Browse from './pages/Browse.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
+import AccountPage from './pages/AccountPage.jsx';
+import MePage from './pages/MePage.jsx';
 import ErrorPage from './components/ErrorPage.jsx';
+import UserAuthenticationPage from "./pages/UserAuthenticationPage.jsx";
 
 
 const router = createBrowserRouter([
@@ -24,12 +25,16 @@ const router = createBrowserRouter([
         element: <Browse />,
       },
       {
-        path: 'login',
-        element: <Login />
+        path: 'user',
+        element: <UserAuthenticationPage />,
       },
       {
-        path: 'register',
-        element: <Register />
+        path: 'account',
+        element: <AccountPage />
+      },
+      {
+        path: 'me',
+        element: <MePage />
       },
     ]
   }

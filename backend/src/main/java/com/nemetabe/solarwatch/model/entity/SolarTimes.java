@@ -26,13 +26,13 @@ public class SolarTimes {
     private LocalTime sunrise;
 
     @Column(nullable = false)
-    private LocalTime sunset;  // Corresponds to API "sunset"
+    private LocalTime sunset;
 
     @Column(nullable = false)
-    private LocalTime solarNoon; // Corresponds to API "solar_noon"
+    private LocalTime solarNoon;
 
     @Column(nullable = false)
-    private Duration dayLength; // Corresponds to API "day_length"
+    private Duration dayLength;
 
     // Civil
     @Column(nullable = false)

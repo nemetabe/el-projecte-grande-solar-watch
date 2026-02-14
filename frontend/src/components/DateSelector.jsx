@@ -35,9 +35,9 @@ function DateSelector({ date, onDateChange }) {
           />
         </Box>
       </LocalizationProvider>
-      {/* <h4 className=" .glass text-black text-1l">
+      <h5 className="glass text-black text-base">
         date: {selectedDate ? selectedDate.format('YYYY-MM-DD') : 'None'}
-      </h4> */}
+      </h5>
     </div>
   );
 }

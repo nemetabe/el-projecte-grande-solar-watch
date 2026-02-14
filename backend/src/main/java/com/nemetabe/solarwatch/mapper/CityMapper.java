@@ -1,6 +1,7 @@
 package com.nemetabe.solarwatch.mapper;
 
 import com.nemetabe.solarwatch.model.dto.api.geocoding.GeocodingDataDto;
+import com.nemetabe.solarwatch.model.dto.city.CityLocationDto;
 import com.nemetabe.solarwatch.model.dto.city.CityResponseDto;
 import com.nemetabe.solarwatch.model.dto.city.CityNameDto;
 import com.nemetabe.solarwatch.model.dto.api.geocoding.GeocodingApiResponseDto;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CityMapper {
@@ -42,21 +44,33 @@ public class CityMapper {
         if (city == null) {
             return null;
         }
-
-        CityResponseDto dto = new CityResponseDto();
-        dto.setName(city.getName());
-        dto.setLatitude(city.getLatitude());
-        dto.setLongitude(city.getLongitude());
-        dto.setState(city.getState());
-        dto.setCountry(city.getCountry());
-        return dto;
+        return new CityResponseDto(
+                city.getId(),
+                city.getName(),
+                city.getCountry(),
+                city.getState(),
+                city.getLatitude(),
+                city.getLongitude(),
+                city.getSolarTimes() == null ? List.of() : city.getSolarTimes().stream()
+                        .map(SolarMapper::toDto)
+                        .toList()
+        );
     }
 
     public static CityNameDto toNameDto(City city) {
         if (city == null) {
             return null;
         }
-        CityNameDto nameDto = new CityNameDto(city.getName(), city.getCountry());
+        CityNameDto nameDto = new CityNameDto(city.getId(), city.getName(), city.getCountry());
         return nameDto;
+    }
+
+    public static CityLocationDto toLocationDto(City city) {
+        if (city == null) {
+            return null;
+        }
+        CityLocationDto locationDto = new CityLocationDto(
+                city.getName(), city.getCountry(), city.getLatitude(), city.getLongitude());
+        return locationDto;
     }
 }

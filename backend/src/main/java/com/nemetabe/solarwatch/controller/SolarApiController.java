@@ -39,10 +39,6 @@ public class SolarController {
     ) {
         logger.info("Received request processing started in the controller method. City: {}, date: {}", city, date);
         LocalDate queryDate = date != null? date : LocalDate.now();
-        if (queryDate == null) {
-            logger.info("Processing request with null value for date. values: city: {}, date: {} queryDate: {}", city, date, queryDate);
-        }
-
         Mono<SolarResponseDto> response = solarService.getSolarInfo(city, queryDate);
        logger.info("Received request processing completed in the controller method. Response: {}", response.toString());
         return response
