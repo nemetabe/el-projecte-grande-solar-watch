@@ -40,13 +40,12 @@ function App() {
 
 
   return (
-    <div 
-      className="bg-cover bg-center bg-no-repeat h-screen w-screen min-h-screen font-inter antialiased flex flex-col"
-      style={{ 
-        backgroundImage: currentGradient, 
-        backgroundRepeat: 'no-repeat', 
-        transition: 'background-image 10s ease-in-out',
-        color: currentTextColor
+    <div
+        className="bg-cover bg-center w-full bg-no-repeat h-screen w-screen min-h-screen font-inter antialiased flex "
+      style={{
+        backgroundImage: currentGradient,
+        backgroundRepeat: 'no-repeat',
+        color: currentTextColor,
       }}
     >
       <NavBar

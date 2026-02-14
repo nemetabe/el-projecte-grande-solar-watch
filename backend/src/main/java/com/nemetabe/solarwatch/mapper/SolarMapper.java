@@ -69,11 +69,10 @@ public class SolarMapper {
                 .solarNoon(formatTimeForFrontend(entity.getSolarNoon()))
                 .dayLength(formatDuration(entity.getDayLength()))
 
-<<<<<<< Updated upstream
-                .nightBegin(parseTime(results.getAstronomicalTwilightBegin()))
-                .nightEnd(parseTime(results.getAstronomicalTwilightEnd()))
+    
+                .nightEnd(parseTime(results.getAstronomicalTwilightBegin()))
+                .nightBegin(parseTime(results.getAstronomicalTwilightEnd()))
                 .timeZone(apiDto.getTzid() != null ? apiDto.getTzid() : "UTC")
-=======
                 .dusk(formatTimeForFrontend(entity.getDusk()))
                 .dawn(formatTimeForFrontend(entity.getDawn()))
 
@@ -84,7 +83,6 @@ public class SolarMapper {
                 .nightEnd(formatTimeForFrontend(entity.getNightEnd()))
                 .city(CityMapper.toNameDto(entity.getCity()))
                 .timeZone(entity.getTimeZone())
->>>>>>> Stashed changes
                 .build();
     }
 
@@ -147,7 +145,6 @@ public class SolarMapper {
             return Duration.ZERO;
         }
     }
-<<<<<<< Updated upstream
 
     // --- MAPPING FROM ENTITY TO FRONTEND DTO ---
     public static SolarResponseDto toDto(SolarTimes entity) {
@@ -165,17 +162,15 @@ public class SolarMapper {
                 formatTimeForFrontend(entity.getDusk()),
                 formatTimeForFrontend(entity.getDawn()),
                 formatTimeForFrontend(entity.getFirstLight()),
-                formatTimeForFrontend(entity.getLastLight()), // Corrected: now maps nautical_twilight_end via entity.getLastLight()
+                formatTimeForFrontend(entity.getLastLight()),
                 formatTimeForFrontend(entity.getNightBegin()),
                 formatTimeForFrontend(entity.getNightEnd()),
-                Optional.ofNullable(entity.getCity())
+                Optional.ofNullable(entity.getCity())//todo
                         .map(CityMapper::toNameDto)
                         .orElse(null),
                 entity.getTimeZone()
         );
     }
-=======
->>>>>>> Stashed changes
 
     private static String formatTimeForFrontend(LocalTime time) {
         if (time == null) {
@@ -201,7 +196,7 @@ public class SolarMapper {
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
-<<<<<<< Updated upstream
+    //members' solar times display
     public static SunsetSunriseDto toSunsetSunriseDto(SolarTimes entity) {
         if (entity == null) {
             return null;
@@ -214,6 +209,4 @@ public class SolarMapper {
                         .orElse(null),
                 entity.getDate());
     }
-=======
->>>>>>> Stashed changes
 }

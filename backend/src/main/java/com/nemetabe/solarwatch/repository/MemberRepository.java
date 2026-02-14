@@ -7,11 +7,13 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Integer> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByName(String name);
 
     Optional<Member> findByEmail(String email);
 
-    boolean deleteMemberById(Integer id);
+    boolean deleteMemberById(Long id);
+
+
 }

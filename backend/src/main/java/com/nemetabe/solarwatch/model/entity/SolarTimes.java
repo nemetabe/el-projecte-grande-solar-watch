@@ -11,9 +11,9 @@ import java.time.LocalTime;
 @Table(name = "solar_times", uniqueConstraints = @UniqueConstraint(columnNames = {"date", "city_id"}))
 @Getter
 @Setter
-@NoArgsConstructor // Required for JPA
-@AllArgsConstructor // Required for @Builder
-@Builder // Enables the builder pattern for clean object creation
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SolarTimes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,28 +27,33 @@ public class SolarTimes {
     private City city;
 
     @Column(nullable = false)
-    private LocalTime sunrise; // Corresponds to API "sunrise"
+    private LocalTime sunrise;
 
     @Column(nullable = false)
-    private LocalTime sunset;  // Corresponds to API "sunset"
+    private LocalTime sunset;
 
     @Column(nullable = false)
-    private LocalTime solarNoon; // Corresponds to API "solar_noon"
+    private LocalTime solarNoon;
 
     @Column(nullable = false)
-    private Duration dayLength; // Corresponds to API "day_length"
+    private Duration dayLength;
 
     // Civil
+    @Column(nullable = false)
     private LocalTime dawn; // Corresponds to API "civil_twilight_begin"
+    @Column(nullable = false)
     private LocalTime dusk; // Corresponds to API "civil_twilight_end"
 
     // Nautical
+    @Column(nullable = false)
     private LocalTime firstLight; // Corresponds to API "nautical_twilight_begin"
     @Column(nullable = false)
     private LocalTime lastLight;  // Corresponds to API "nautical_twilight_end"
 
     // Astronomical
+    @Column(nullable = false)
     private LocalTime nightBegin; // Corresponds to API "astronomical_twilight_end"
+    @Column(nullable = false)
     private LocalTime nightEnd;   // Corresponds to API "astronomical_twilight_begin"
 
     @Column(nullable = false)

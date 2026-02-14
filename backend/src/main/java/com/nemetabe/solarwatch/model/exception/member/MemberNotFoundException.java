@@ -1,4 +1,4 @@
-package com.nemetabe.solarwatch.model.exception;
+package com.nemetabe.solarwatch.model.exception.member;
 
 public class MemberNotFoundException extends RuntimeException {
     public MemberNotFoundException(String value, String specifier ) {

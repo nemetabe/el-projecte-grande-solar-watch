@@ -7,13 +7,26 @@ const ErrorPage = () => {
   const error = useRouteError();
   console.error(error);
 
+    useEffect(() => {
+        if (error.status === 401) {
+            sleep(1000);
+            localStorage.setItem("solAndRJwt", null);
+            window.location.href = "/browse";
+        }
+    }, []);
+
   return (
     <div id="error-page">
       <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
-      <p>
-        <i>{error.statusText || error.message}</i>
-      </p>
+        <Typography color="error" align="center" variant="h6" mt={4}>
+            {error.message === null && error.statusText === null ? (
+             "An unexpected error has occurred."
+            ) :(
+                error.message || error.statusText
+            )
+            }
+
+        </Typography>
     </div>
   );
 };

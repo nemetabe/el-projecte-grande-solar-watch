@@ -1,8 +1,5 @@
 package com.nemetabe.solarwatch.model.entity;
 
-import java.util.Arrays;
-import java.util.Map;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +16,8 @@ import java.util.List;
 @Entity
 @Table(
         name = "cities",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"name", "country"})
-)//TODO state <-> country
+        uniqueConstraints = @UniqueConstraint(columnNames = {"lat", "lon"})
+)
 public class City {
 
     @Id
@@ -42,13 +39,6 @@ public class City {
     @Column(name = "lon", nullable = false)
     private Double longitude;
 
-//    @ElementCollection
-//    @MapKeyColumn(name = "language_code")  // This is the key column in the database
-//    @Column(name = "local_name")  // This is the value column in the database
-//    @CollectionTable(name = "city_local_names", joinColumns = @JoinColumn(name = "city_id"))
-//    private Map<String, String> localNames;
-
-    @Column(name = "solar_times")
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SolarTimes> solarTimes = new ArrayList<>();
 

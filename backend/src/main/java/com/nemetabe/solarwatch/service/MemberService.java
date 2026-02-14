@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -67,7 +68,39 @@ public class MemberService {
         member.setRoles(copiedRoles);
         memberRepository.save(member);
     }
+    public MemberProfileDto setFavouriteCity(Long memberId, City city) {
+        Member member = getMember(memberId);
+        member.setFavouriteCity(city);
+        memberRepository.save(member);
+            return new MemberProfileDto(
+                member.getId(),
+                member.getName(),
+                member.getEmail(),
+                new CityNameDto(city.getId(), city.getName(), city.getCountry())
+        );
+    }
 
+
+
+    public CityResponseDto getFavouriteCity(Long memberId) {
+        Member member = getMember(memberId);
+        return CityMapper.toDto(member.getFavouriteCity());
+    }
+
+    private Member getMember(Long memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isEmpty()) {
+            throw new MemberIdNotFoundException(memberId);
+        }
+        return optionalMember.get();
+    }
+
+    public boolean deleteMember(Long memberId) {
+        getMember(memberId);
+        return memberRepository.deleteMemberById(memberId);
+    }
+
+<<<<<<< HEAD
     public MemberProfileDto setFavouriteCity(Long memberId, City city) {
         Member member = getMember(memberId);
         member.setFavouriteCity(city);
@@ -100,6 +133,8 @@ public class MemberService {
     }
 
 //TODO
+=======
+>>>>>>> 53ca57ac672942bde24e4d9df415ed4d356daa65
     public boolean register(MemberRegistrationDto registrationDto, PasswordEncoder passwordEncoder) {
         if (memberRepository.findByName(registrationDto.name()).isPresent()) {
             return false;
@@ -115,10 +150,18 @@ public class MemberService {
         member.setPassword(passwordEncoder.encode(registrationDto.password()));
         member.setEmail(registrationDto.email());
         member.setRoles(Set.of(Role.ROLE_USER));
+<<<<<<< HEAD
         member.setFavouriteCity(city);
         memberRepository.save(member);
         return true;
     }
+=======
+        member.setFavouriteCity(null);
+        memberRepository.save(member);
+        return true;
+    }
+
+>>>>>>> 53ca57ac672942bde24e4d9df415ed4d356daa65
 }
 
 
